@@ -50,6 +50,8 @@ class SSHInteractiveSession:
         if not self.shell:
             raise Exception("Shell not connected")
         self.full_output = b""
+
+        command = "run_command() {\n" + command + "\n}\nrun_command"
         self.shell.send((command + " \\\n" +SSHInteractiveSession.end_comment + "\n").encode())
 
     def read_output(self) -> Tuple[str, str]:
