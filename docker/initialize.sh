@@ -12,6 +12,9 @@ if [ ! -f /root/.profile ]; then
     chmod 444 /root/.profile
 fi
 
+# Ensure ACI is in the root directorys
+cp -r /etc/skel/commands /root/commands
+
 apt-get update
 
 # Start SSH service

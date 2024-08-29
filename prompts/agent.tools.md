@@ -129,6 +129,24 @@ Execute provided terminal commands, python code or nodejs code.
 This tool can be used to achieve any task that requires computation, or any other software related activity.
 Place your code escaped and properly indented in the "code" argument.
 Select the corresponding runtime with "runtime" argument. Possible values are "terminal", "python" and "nodejs".
+When using "terminal" runtime apart regular Bash commands you can enter the following hand-written commands:
+
+```
+search_dir SEARCH_TERM [DIR]
+    Searches for SEARCH_TERM in all files in the specified directory.
+    If DIR is not provided, searches in the current directory.
+
+search_file SEARCH_TERM [PATH]
+    Searches for SEARCH_TERM in the file with the specified PATH.
+    If PATH is not provided, searches in the current open file.
+
+find_file FILE_NAME [DIR]
+    Finds all files with the given FILE_NAME in the specified directory.
+    If DIR is not provided, searches in the current directory.
+
+summarize PATH
+    Gets a summary of the file with the given PATH.
+```
 Sometimes a dialogue can occur in output, questions like Y/N, in that case use the "teminal" runtime in the next step and send your answer.
 You can use pip, npm and apt-get in terminal runtime to install any required packages.
 IMPORTANT: Never use implicit print or implicit output, it does not work! If you need output of your code, you MUST use print() or console.log() to output selected variables. 
@@ -138,59 +156,166 @@ Do not use in combination with other tools except for thoughts. Wait for respons
 When writing own code, ALWAYS put print/log statements inside and at the end of your code to get results!
 **Example usages:**
 1. Execute python code
-~~~json
-{
-    "thoughts": [
-        "I need to do...",
-        "I can use library...",
-        "Then I can...",
-    ],
-    "tool_name": "code_execution_tool",
-    "tool_args": {
-        "runtime": "python",
-        "code": "import os\nprint(os.getcwd())",
+    ~~~json
+    {
+        "thoughts": [
+            "I need to do...",
+            "I can use library...",
+            "Then I can...",
+        ],
+        "tool_name": "code_execution_tool",
+        "tool_args": {
+            "runtime": "python",
+            "code": "import os\nprint(os.getcwd())",
+        }
     }
-}
-~~~
+    ~~~
 
 2. Execute terminal command
-~~~json
-{
-    "thoughts": [
-        "I need to do...",
-        "I need to install...",
-    ],
-    "tool_name": "code_execution_tool",
-    "tool_args": {
-        "runtime": "terminal",
-        "code": "apt-get install zip",
+    ~~~json
+    {
+        "thoughts": [
+            "I need to do...",
+            "I need to install...",
+        ],
+        "tool_name": "code_execution_tool",
+        "tool_args": {
+            "runtime": "terminal",
+            "code": "apt-get install zip",
+        }
     }
-}
-~~~
+    ~~~
 
-2. 1. Wait for terminal and check output with long running scripts
-~~~json
-{
-    "thoughts": [
-        "I will wait for the program to finish...",
-    ],
-    "tool_name": "code_execution_tool",
-    "tool_args": {
-        "runtime": "output",
+3. 1. Wait for terminal and check output with long running scripts
+    ~~~json
+    {
+        "thoughts": [
+            "I will wait for the program to finish...",
+        ],
+        "tool_name": "code_execution_tool",
+        "tool_args": {
+            "runtime": "output",
+        }
     }
-}
-~~~
+    ~~~
 
-2. 2. Answer terminal dialog
-~~~json
-{
-    "thoughts": [
-        "Program needs confirmation...",
-    ],
-    "tool_name": "code_execution_tool",
-    "tool_args": {
-        "runtime": "terminal",
-        "code": "Y",
+4. 2. Answer terminal dialog
+    ~~~json
+    {
+        "thoughts": [
+            "Program needs confirmation...",
+        ],
+        "tool_name": "code_execution_tool",
+        "tool_args": {
+            "runtime": "terminal",
+            "code": "Y",
+        }
     }
-}
-~~~
+    ~~~
+
+### ide_tool:
+
+Integrated Development Tool (IDE) that shows you 100 line of a file at a time, may create file, navigate through and update its content. 
+
+File editor contains file name, content with line numbers- and information about total lines, above and under like on example.  
+```
+[File: /path/to/file.txt  (500 lines total)]
+(100 lines above)
+101: content 
+102: of 
+103: the
+  ...
+200: file
+(300 lines below)
+```
+
+Allowed arguments are "open", "goto", "scroll", "create" and "replace_to". 
+
+When argument references a file always use absolute path.
+
+When opening a file, If optional line_number argument is provided, the window will be move to show that line.
+
+When creating a file, the new file is opened.
+
+When scrolling content, parameter scroll may be one of "up" and "down". "up" shows previous 100 lines. "down" shows next 100 lines.
+
+When editing file by replacement, IDE replaces lines **start_line** through **end_line** (inclusive) with the **replece_to** text in the open file. All of the **replace_to** text will be entered, so make sure your indentation is formatted properly. Files will be checked for syntax errors after the edit. If the system detects a syntax error, the edit will not be executed. Simply try to edit the file again, but make sure to read the error message and modify the edit command you issue accordingly. Issuing the same command a second time will just lead to the same error message again.
+
+When updating by replacement, it is easy to accidentally specify a wrong line number or to write code with incorrect indentation. Always check the code after you issue an edit to make sure that it reflects what you wanted to accomplish. If it didn't, issue another command to fix it.
+
+If you open a file and need to get to an area around a specific line that is not in the first 100 lines, say line 583, don't just use the scroll_down command multiple times. Instead, use the goto 583 command. It's much quicker.
+
+**Example usages**:
+1. Open existing file:
+    ~~~json
+    {
+        "thoughts": [
+            "To fix this issue...",
+            "Let's open file ~/readme.md...",
+            "Then we may..."
+        ],
+        "tool_name": "ide",
+        "tool_args": {
+            "open": "~/readme.md",
+            "line_number": 250
+        }
+    }
+    ~~~
+2. Go to line number:
+    ~~~json
+    {
+        "thoughts": [
+            "The last output says the error on line 250...",
+            "Let's go to the line and...",
+            "Then ...",
+        ],
+        "tool_name": "ide",
+        "tool_args": {
+            "goto": 250,
+        }
+    }
+    ~~~
+3. Scroll down:
+    ~~~json
+    {
+        "thoughts": [
+            "The output don't contain expected line...",
+            "Let's scroll down the window...",
+            "Then we ..."
+        ],
+        "tool_name": "ide",
+        "tool_args": {
+            "scroll": "down",
+        }
+    }
+    ~~~
+4. Create new file in file system and open it in IDE:
+    ~~~json
+    {
+        "thoughts": [
+            "File not found...",
+            "Let's create a new file with the name...",
+            "Then I..."
+        ],
+        "tool_name": "ide",
+        "tool_args": {
+            "create": "~/path/to/file",
+        }
+    }
+    ~~~
+5. Replace file content between specified lines (inclusive) with the new content:
+    ~~~json
+    {
+        "thoughts": [
+            "The line 15 and 16 contains error...",
+            "Let's edit line 15 and 16...",
+            "Then I..."
+        ],
+        "tool_name": "ide",
+        "tool_args": {
+            "replace_to": "Put replacement text here.\nMay be multiline.\nContent of any size allowed.",
+            "start_line": 15,
+            "end_line":16
+        }
+    }
+    ~~~

@@ -1,5 +1,5 @@
 # Use the latest slim version of Debian
-FROM --platform=$TARGETPLATFORM debian:bookworm-slim
+FROM  debian:bookworm-slim
 
 # Set ARG for platform-specific commands
 ARG TARGETPLATFORM
@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     npm \
     openssh-server \
     sudo \
+    jq \
     && rm -rf /var/lib/apt/lists/*
 
 # Set up SSH
@@ -24,10 +25,13 @@ RUN mkdir /var/run/sshd && \
 ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv $VIRTUAL_ENV
 
-# Copy initial .bashrc with virtual environment activation to a temporary location
+# Copy ACI to a temporary location
+COPY commands /etc/skel/commands
+
+# Copy initial .bashrc with virtual environment and ACI activation to a temporary location
 COPY .bashrc /etc/skel/.bashrc
 
-# Copy the script to ensure .bashrc is in the root directory
+# Copy the script to ensure .bashrc and ACI is in the root directory
 COPY initialize.sh /usr/local/bin/initialize.sh
 RUN chmod +x /usr/local/bin/initialize.sh
 
