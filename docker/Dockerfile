@@ -25,6 +25,9 @@ RUN mkdir /var/run/sshd && \
 ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv $VIRTUAL_ENV
 
+# Install flake8 for ACI linting
+RUN $VIRTUAL_ENV/bin/pip install flake8
+
 # Copy ACI to a temporary location
 COPY commands /etc/skel/commands
 

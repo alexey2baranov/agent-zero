@@ -34,8 +34,19 @@ def get_huggingface_embedding(model_name:str):
     return HuggingFaceEmbeddings(model_name=model_name)
 
 # LM Studio and other OpenAI compatible interfaces
-def get_lmstudio_chat(model_name:str, base_url="http://localhost:1234/v1", temperature=DEFAULT_TEMPERATURE):
-    return ChatOpenAI(model_name=model_name, base_url=base_url, temperature=temperature, api_key="none") # type: ignore
+def get_lmstudio_chat(
+    model_name: str,
+    temperature=DEFAULT_TEMPERATURE,
+):
+    api_key = get_api_key("lmstudio")
+    base_url = os.getenv("BASE_URL_LMSTUDIO") or "http://localhost:1234/v1"
+    return ChatOpenAI(
+        model_name=model_name,  # type: ignore
+        base_url=base_url,
+        temperature=temperature,
+        api_key=api_key,
+    )
+
 
 def get_lmstudio_embedding(model_name:str, base_url="http://localhost:1234/v1"):
     return OpenAIEmbeddings(model_name=model_name, base_url=base_url) # type: ignore
@@ -43,7 +54,10 @@ def get_lmstudio_embedding(model_name:str, base_url="http://localhost:1234/v1"):
 # Anthropic models
 def get_anthropic_chat(model_name:str, api_key=None, temperature=DEFAULT_TEMPERATURE):
     api_key = api_key or get_api_key("anthropic")
-    return ChatAnthropic(model_name=model_name, temperature=temperature, api_key=api_key) # type: ignore
+    return ChatAnthropic(
+        model_name=model_name, temperature=temperature, api_key=api_key
+    )  # type: ignore
+
 
 # OpenAI models
 def get_openai_chat(model_name:str, api_key=None, temperature=DEFAULT_TEMPERATURE):

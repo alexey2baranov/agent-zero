@@ -34,7 +34,7 @@ class SSHInteractiveSession:
                 #     time.sleep(0.1)
             except Exception as e:
                 errors += 1
-                if errors < 3:
+                if errors < 5:
                     print(f"SSH Connection attempt {errors}...")
                     time.sleep(5)
                 else:

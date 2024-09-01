@@ -56,6 +56,7 @@ class Agent:
 
         self.system_prompt = files.read_file("./prompts/agent.system.md", agent_name=self.agent_name)
         self.tools_prompt = files.read_file("./prompts/agent.tools.md")
+        self.demonstration_prompt = files.read_file("./prompts/agent.demonstration.md")
 
         self.history = []
         self.last_message = ""
@@ -81,7 +82,7 @@ class Agent:
 
                 try:
 
-                    system = self.system_prompt + "\n\n" + self.tools_prompt
+                    system = self.system_prompt + "\n\n" + self.tools_prompt + "\n\n" + self.demonstration_prompt
                     memories = self.fetch_memories()
                     if memories: system+= "\n\n"+memories
 
