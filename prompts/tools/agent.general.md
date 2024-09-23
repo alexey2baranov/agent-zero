@@ -1,5 +1,3 @@
-## Tools available:
-
 ### task_done:
 Final answer for user.
 Ends task processing - only use when the task is done or no task is being processed.

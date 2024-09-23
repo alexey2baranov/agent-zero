@@ -1,7 +1,9 @@
 # Provide a JSON summary of given messages
 - From the messages you are given, write a summary of key points in the conversation.
 - Include important aspects and remove unnecessary details.
+- Keep your active task(s)
 - Keep necessary information like file names, URLs, keys etc.
+- For iterative fixes remove intermediate attempts and only keep final result.
 
 # Expected output format
 ~~~json

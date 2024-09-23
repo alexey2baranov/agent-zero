@@ -1,10 +1,3 @@
-# DEMONSTRATION 
-
-Here is a example of how to correctly accomplish a task.
-It is included to show you how to correctly use the tools.
-You do not need to follow exactly what is done in the demonstration.
-
---- DEMONSTRATION ---
 Solve the following issue within our repository. Here's the issue text:
 ISSUE:
 TimeDelta serialization precision
@@ -658,5 +651,3 @@ Your command ran successfully and did not produce any output.
         "text": "Issue fixed. One file will be updated, reproduce script ran successfully, and then deleted."
     }
 }
-
---- END OF DEMONSTRATION ---

@@ -20,9 +20,9 @@ os.chdir(files.get_abs_path("./work_dir")) #change CWD to work_dir
 
 def initialize():
     # main chat model used by agents (smarter, more accurate)
-    chat_llm = models.get_openai_chat(model_name="gpt-4o-mini", temperature=0)
+    # chat_llm = models.get_openai_chat(model_name="gpt-4o-mini", temperature=0)
     # chat_llm = models.get_ollama_chat(model_name="gemma2:latest", temperature=0)
-    # chat_llm = models.get_lmstudio_chat(model_name="deepseek-coder", temperature=0)
+    chat_llm = models.get_lmstudio_chat(model_name="deepseek-coder", temperature=0)
     # chat_llm = models.get_openrouter(model_name="meta-llama/llama-3-8b-instruct:free")
     # chat_llm = models.get_azure_openai_chat(deployment_name="gpt-4o-mini", temperature=0)
     # chat_llm = models.get_anthropic_chat(model_name="claude-3-5-sonnet-20240620", temperature=0)
@@ -50,8 +50,8 @@ def initialize():
         # rate_limit_input_tokens = 0,
         # rate_limit_output_tokens = 0,
         # msgs_keep_max = 25,
-        # msgs_keep_start = 5,
-        # msgs_keep_end = 10,
+        msgs_keep_start = 0,
+        # msgs_keep_end = 5,
         # max_tool_response_length = 3000,
         response_timeout_seconds = 300,
         code_exec_docker_enabled = True,
@@ -65,6 +65,8 @@ def initialize():
         # code_exec_ssh_user = "root",
         # code_exec_ssh_pass = "toor",
         # additional = {},
+        tools = ['general', 'folder_tree'],
+        demonstrations= ['general', 'create_tool']
     )
     
     # create the first agent

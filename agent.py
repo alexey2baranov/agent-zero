@@ -38,6 +38,8 @@ class AgentConfig:
     code_exec_ssh_user: str = "root"
     code_exec_ssh_pass: str = "toor"
     additional: Dict[str, Any] = field(default_factory=dict)
+    tools: list[str] = field(default_factory=lambda: [])
+    demonstrations: list[str] = field(default_factory=lambda: [])
     
 
 class Agent:
@@ -54,9 +56,9 @@ class Agent:
         self.number = number
         self.agent_name = f"Agent {self.number}"
 
-        self.system_prompt = files.read_file("./prompts/agent.system.md", agent_name=self.agent_name)
-        self.tools_prompt = files.read_file("./prompts/agent.tools.md")
-        self.demonstration_prompt = files.read_file("./prompts/agent.demonstration.md")
+        self.tools_prompt = self.build_tools_prompt(config.tools)
+        self.demonstration_prompt=self.build_demonstration_prompt(config.demonstrations)
+        self.system_prompt = files.read_file("./prompts/agent.system.md", agent_name=self.agent_name, tools=self.tools_prompt, demonstrations=self.demonstration_prompt)
 
         self.history = []
         self.last_message = ""
@@ -66,7 +68,16 @@ class Agent:
         self.data = {} # free data object all the tools can use
 
         os.chdir(files.get_abs_path("./work_dir")) #change CWD to work_dir
-        
+    
+    def build_tools_prompt(self, tools: list[str]):
+        if not tools: raise Exception(f"No tools specified for agent {self.agent_name}")
+        tool_contents = [files.read_file(f"./prompts/tools/agent.{tool}.md") for tool in tools]
+        return '\n\n'.join(tool_contents)
+    
+    def build_demonstration_prompt(self, demonstrations: list[str]):
+        if not demonstrations: raise Exception(f"No demonstrations specified for agent {self.agent_name}")
+        demonstration_contents = [f"## Demonstration {i}\n{files.read_file(f'./prompts/demonstrations/agent.{demonstration}.md')}" for i, demonstration in enumerate(demonstrations)]
+        return '\n\n'.join(demonstration_contents)
 
     def message_loop(self, msg: str):
         try:
@@ -82,7 +93,7 @@ class Agent:
 
                 try:
 
-                    system = self.system_prompt + "\n\n" + self.tools_prompt + "\n\n" + self.demonstration_prompt
+                    system = self.system_prompt
                     memories = self.fetch_memories()
                     if memories: system+= "\n\n"+memories
 
@@ -193,7 +204,7 @@ class Agent:
     def replace_middle_messages(self,middle_messages):
         cleanup_prompt = files.read_file("./prompts/fw.msg_cleanup.md")
         summary = self.send_adhoc_message(system=cleanup_prompt,msg=self.concat_messages(middle_messages), output_label="Mid messages cleanup summary")
-        new_human_message = HumanMessage(content=summary)
+        new_human_message = HumanMessage(content=summary) 
         return [new_human_message]
 
     def cleanup_history(self, max:int, keep_start:int, keep_end:int):
