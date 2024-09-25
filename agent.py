@@ -120,7 +120,6 @@ class AgentConfig:
     code_exec_ssh_pass: str = "toor"
     additional: Dict[str, Any] = field(default_factory=dict)
 
-
 # intervention exception class - skips rest of message loop iteration
 class InterventionException(Exception):
     pass
@@ -158,6 +157,18 @@ class Agent:
             window_seconds=self.config.rate_limit_seconds,
         )
         self.data = {}  # free data object all the tools can use
+
+        os.chdir(files.get_abs_path("./work_dir")) #change CWD to work_dir
+    
+    def build_tools_prompt(self, tools: list[str]):
+        if not tools: raise Exception(f"No tools specified for agent {self.agent_name}")
+        tool_contents = [files.read_file(f"./prompts/tools/agent.{tool}.md") for tool in tools]
+        return '\n\n'.join(tool_contents)
+    
+    def build_demonstration_prompt(self, demonstrations: list[str]):
+        if not demonstrations: raise Exception(f"No demonstrations specified for agent {self.agent_name}")
+        demonstration_contents = [f"## Demonstration {i}\n{files.read_file(f'./prompts/demonstrations/agent.{demonstration}.md')}" for i, demonstration in enumerate(demonstrations)]
+        return '\n\n'.join(demonstration_contents)
 
     async def message_loop(self, msg: str):
         try:

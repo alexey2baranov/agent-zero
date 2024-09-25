@@ -94,7 +94,7 @@ class CodeExecution(Tool):
        
         self.state.shell.send_command(command)
 
-        PrintStyle(background_color="white",font_color="#1B4F72",bold=True).print(f"{self.agent.agent_name} code execution output:")
+        PrintStyle(background_color="white",font_color="#1B4F72",bold=True).print(f"{self.agent.agent_name}: Response from tool '{self.name}':")
         return await self.get_terminal_output()
 
     async def get_terminal_output(self, wait_with_output=3, wait_without_output=10):

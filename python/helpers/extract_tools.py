@@ -1,3 +1,4 @@
+import json
 import re, os
 from typing import Any
 from .  import files
@@ -6,11 +7,14 @@ from .dirty_json import DirtyJson
 import regex
 
 
-def json_parse_dirty(json:str) -> dict[str,Any] | None:
-    ext_json = extract_json_object_string(json)
+def json_parse_dirty(dirty_json:str) -> dict[str,Any] | None:
+    ext_json = extract_json_object_string(dirty_json)
     if ext_json:
+        try:
+            data= json.loads(ext_json)
+        except Exception:
         # ext_json = fix_json_string(ext_json)
-        data = DirtyJson.parse_string(ext_json)
+            data = DirtyJson.parse_string(ext_json)
         if isinstance(data,dict): return data
     return None
 

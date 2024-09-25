@@ -36,8 +36,15 @@ def get_huggingface_embedding(model_name:str):
     return HuggingFaceEmbeddings(model_name=model_name)
 
 # LM Studio and other OpenAI compatible interfaces
-def get_lmstudio_chat(model_name:str, temperature=DEFAULT_TEMPERATURE, base_url=os.getenv("LM_STUDIO_BASE_URL") or "http://127.0.0.1:1234/v1"):
-    return ChatOpenAI(model_name=model_name, base_url=base_url, temperature=temperature, api_key="none") # type: ignore
+def get_lmstudio_chat(model_name: str, temperature=DEFAULT_TEMPERATURE, base_url=os.getenv("LM_STUDIO_BASE_URL") or "http://127.0.0.1:1234/v1"):
+    api_key = get_api_key("lmstudio")
+    return ChatOpenAI(
+        model_name=model_name,  # type: ignore
+        base_url=base_url,
+        temperature=temperature,
+        api_key=api_key,
+    )
+
 
 def get_lmstudio_embedding(model_name:str, base_url=os.getenv("LM_STUDIO_BASE_URL") or "http://127.0.0.1:1234/v1"):
     return OpenAIEmbeddings(model=model_name, api_key="none", base_url=base_url, check_embedding_ctx_length=False) # type: ignore

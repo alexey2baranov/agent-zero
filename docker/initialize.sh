@@ -12,6 +12,16 @@ if [ ! -f /root/.profile ]; then
     chmod 444 /root/.profile
 fi
 
+# Ensure ACI is in the root directorys
+cp -r /etc/skel/commands /root/commands
+
+# Enshure ACI _split_string.py is available
+if [ ! -f /usr/local/bin/_split_string ]; then
+    mkdir -p /usr/local/bin
+    ln -s /root/commands/_split_string.py /usr/local/bin/_split_string
+    chmod +x /usr/local/bin/_split_string
+fi
+
 apt-get update
 
 # Start SSH service
