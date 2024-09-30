@@ -3,25 +3,25 @@ from python.tools.z_code_execution_tool import ZCodeExecution
 
 
 class IDE(ZCodeExecution):
-    def execute(self, **kwargs):
+    async def execute(self, **kwargs):
         if "open" in kwargs:
-            result = self.open_file(kwargs["open"], kwargs.get("line_number", 1))
+            result = await self.open_file(kwargs["open"], kwargs.get("line_number", 1))
         elif "goto" in kwargs:
-            result = self.goto_line(kwargs["goto"])
+            result = await self.goto_line(kwargs["goto"])
         elif "scroll" in kwargs:
-            result = self.scroll(kwargs["scroll"])
+            result = await self.scroll(kwargs["scroll"])
         elif "create" in kwargs:
-            result = self.create_file(kwargs["create"])
+            result = await self.create_file(kwargs["create"])
         elif "replace_to" in kwargs:
-            result = self.replace_lines(
+            result = await self.replace_lines(
                 kwargs["replace_to"], kwargs["start_line"], kwargs["end_line"]
             )
         elif "search_file" in kwargs:
-            result = self.search_file(kwargs["search_file"], kwargs["path"])
+            result = await self.search_file(kwargs["search_file"], kwargs["path"])
         elif "search_dir" in kwargs:
-            result = self.search_dir(kwargs["search_dir"], kwargs["dir"])
+            result = await self.search_dir(kwargs["search_dir"], kwargs["dir"])
         elif "find_file" in kwargs:
-            result = self.find_file(kwargs["find_file"], kwargs["dir"])
+            result = await self.find_file(kwargs["find_file"], kwargs["dir"])
         else:
             result = Response("Invalid IDE command", False)
 
@@ -32,17 +32,17 @@ class IDE(ZCodeExecution):
 
         return result
 
-    def open_file(self, file_path: str, line_number: int):
+    async def open_file(self, file_path: str, line_number: int):
         self.args["runtime"] = "terminal"
         self.args["code"] = f"open {file_path} {line_number}"
-        return super().execute()
+        return await super().execute()
 
-    def goto_line(self, line_number: int):
+    async def goto_line(self, line_number: int):
         self.args["runtime"] = "terminal"
         self.args["code"] = f"goto {line_number}"
-        return super().execute()
+        return await super().execute()
 
-    def scroll(self, direction: str) -> Response:
+    async def scroll(self, direction: str) -> Response:
         self.args["runtime"] = "terminal"
 
         if direction == "up":
@@ -51,37 +51,37 @@ class IDE(ZCodeExecution):
             self.args["code"] = "scroll_down"
         else:
             raise ValueError("Invalid scroll direction.")
-        return super().execute()
+        return await super().execute()
 
-    def create_file(self, file_path: str):
+    async def create_file(self, file_path: str):
         self.args["runtime"] = "terminal"
         self.args["code"] = f"create {file_path}"
-        return super().execute()
+        return await super().execute()
 
-    def replace_lines(self, replace_to: str, start_line: int, end_line: int):
+    async def replace_lines(self, replace_to: str, start_line: int, end_line: int):
         self.args["runtime"] = "terminal"
         self.args["code"] = f"""edit {start_line}:{end_line} << EOD
 {replace_to}
 EOD"""
-        return super().execute()
+        return await super().execute()
     
-    def search_file(self, search_term: str, path: str) -> Response:
+    async def search_file(self, search_term: str, path: str) -> Response:
         if not path:
             return Response(f"`path` parameter is required", False)
         self.args["runtime"] = "terminal"
         self.args["code"] = f"search_file {search_term} {path}"
-        return super().execute()
+        return await super().execute()
 
-    def search_dir(self, search_term: str, dir: str) -> Response:
+    async def search_dir(self, search_term: str, dir: str) -> Response:
         if not dir:
             return Response(f"`dir` parameter is required", False)
         self.args["runtime"] = "terminal"
         self.args["code"] = f"search_dir {search_term} {dir}"
-        return super().execute()
+        return await super().execute()
 
-    def find_file(self, file_name: str, dir: str) -> Response:
+    async def find_file(self, file_name: str, dir: str) -> Response:
         if not dir:
             return Response(f"`dir` parameter is required", False)
         self.args["runtime"] = "terminal"
         self.args["code"] = f"find_file {file_name} {dir}"
-        return super().execute()
+        return await super().execute()
