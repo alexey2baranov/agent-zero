@@ -177,7 +177,8 @@ class Agent:
             await self.append_message(
                 user_message, human=True
             )  # Append the user's input to the history
-            memories = await self.fetch_memories(True)
+            # memories = await self.fetch_memories(True)
+            self.memory_skip_counter=0
 
             while (
                 True
@@ -194,7 +195,7 @@ class Agent:
                     )
                     memories = await self.fetch_memories()
                     if memories:
-                        system += "\n\n" + memories
+                        system += "\n\n" + self.read_prompt("agent.memory.md", memories= memories)
 
                     prompt = ChatPromptTemplate.from_messages(
                         [
@@ -361,7 +362,7 @@ class Agent:
         self.rate_limiter.limit_call_and_input(tokens)
 
         async for chunk in chain.astream({}):
-            if self.handle_intervention():
+            if await self.handle_intervention():
                 break  # wait for intervention and handle it, if paused
 
             if isinstance(chunk, str):
@@ -501,15 +502,24 @@ class Agent:
             from python.tools import memory_tool
 
             messages = self.concat_messages(self.history)
-            memories = memory_tool.search(self, messages)
-            input = {"conversation_history": messages, "raw_memories": memories}
-            cleanup_prompt = self.read_prompt("msg.memory_cleanup.md").replace(
-                "{", "{{"
-            )
-            clean_memories = await self.send_adhoc_message(
-                cleanup_prompt, json.dumps(input), output_label="Memory injection"
-            )
-            return clean_memories
+            active_topics_json = await self.send_adhoc_message(self.read_prompt('msg.active_topics.md'), messages, output_label="Memory injection topic extracting")
+            active_topics = (extract_tools.json_parse_dirty(active_topics_json) or {}).get("active_topics", [])
+
+            crosstopic_memories= ""
+            for topic in active_topics:
+                memories = memory_tool.search(self, topic)
+                if "No memories found for specified query" in memories:
+                    continue
+                crosstopic_memories += "\n"+memories
+
+            if not crosstopic_memories:
+                return ""
+
+            summary_prompt = self.read_prompt("msg.memory_cleanup.md")            
+            summaries = await self.send_adhoc_message(
+                    summary_prompt, crosstopic_memories, output_label="Memory injection"
+                )
+            return summaries
 
     def log_from_stream(self, stream: str, logItem: Log.LogItem):
         try:
