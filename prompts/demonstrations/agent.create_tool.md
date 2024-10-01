@@ -1,4 +1,4 @@
-You are in the root folder of the repository `agent-zero` inside `~` dir. Create a new `folder_tree` tool that takes a path to a folder as input and returns a string representation of the folder structure.
+Hey Agent! You are in the root folder of the repository `agent-zero` inside `~` dir. Create a new `folder_tree` tool that takes a path to a folder as input and returns a string representation of the folder structure.
 
 {
     "thoughts": [
