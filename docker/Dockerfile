@@ -31,6 +31,8 @@ RUN $VIRTUAL_ENV/bin/pip install flake8 pytest
 
 # Copy ACI to a temporary location
 COPY commands /etc/skel/commands
+COPY aci /etc/skel/aci
+RUN chmod -R +x /etc/skel/aci
 
 # Copy initial .bashrc with virtual environment and ACI activation to a temporary location
 COPY .bashrc /etc/skel/.bashrc

@@ -9,7 +9,10 @@ fi
 source /opt/venv/bin/activate
 
 # Activate ACI
-source /root/commands/defaults.sh
+# source /root/commands/defaults.sh # replaced by Python ACI
+# source /root/commands/edit_linting.sh # replaced by Python ACI
+# source /root/commands/env.sh # replaced by Python ACI
 source /root/commands/search.sh
-source /root/commands/edit_linting.sh
-source /root/commands/env.sh
+
+# Make Python ACI is available
+export PATH="/root/aci:$PATH"

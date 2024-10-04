@@ -282,7 +282,7 @@ File updated. Please review the changes and make sure they are correct (correct 
     "thoughts": [
         "Now let's run the code to see if we see the same output as the issue."
     ],
-    "tool_name": "execute_command_tool",
+    "tool_name": "code_execution_tool",
     "tool_args": {
         "runtime": "terminal",
         "code": "python reproduce.py"
@@ -298,7 +298,7 @@ File updated. Please review the changes and make sure they are correct (correct 
         "Let's open the `fields.py` file and navigate to line 1474 to see the relevant code.",
         "First we should find the `fields.py` file in the repository. It is likely to be in the `src/marshmallow` directory, but we should check to be sure."
     ],
-    "tool_name": "execute_command_tool",
+    "tool_name": "code_execution_tool",
     "tool_args": {
         "runtime": "terminal",
         "code": "ls -F"
@@ -606,7 +606,7 @@ File updated. Please review the changes and make sure they are correct (correct 
         "Before submitting the changes, it would be prudent to run the reproduce.py code again to ensure that this change has the desired effect.",
         "I see that \"Current directory\" is still `/marshmallow-code__marshmallow`, so we can just run `reproduce.py` directly."
     ],
-    "tool_name": "execute_command_tool",
+    "tool_name": "code_execution_tool",
     "tool_args": {
         "runtime": "terminal",
         "code": "python reproduce.py"
@@ -620,7 +620,7 @@ File updated. Please review the changes and make sure they are correct (correct 
         "The output has changed from 344 to 345, which suggests that the rounding issue has been fixed.",
         "Let's remove the reproduce.py file since it is no longer needed."
     ],
-    "tool_name": "execute_command_tool",
+    "tool_name": "code_execution_tool",
     "tool_args": {
         "runtime": "terminal",
         "code": "rm reproduce.py"
@@ -634,7 +634,7 @@ Your command ran successfully and did not produce any output.
         "The output has changed from 344 to 345, which suggests that the rounding issue has been fixed.",
         "Let's remove the reproduce.py file since it is no longer needed."
     ],
-    "tool_name": "execute_command_tool",
+    "tool_name": "code_execution_tool",
     "tool_args": {
         "runtime": "terminal",
         "code": "rm reproduce.py"

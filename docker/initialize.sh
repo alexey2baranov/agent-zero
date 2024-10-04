@@ -1,28 +1,16 @@
 #!/bin/bash
 
+# Copy shell & Python ACI in the root directorys
+cp -r /etc/skel/commands /root/commands
+cp -r /etc/skel/aci /root/aci
+
 # Ensure .bashrc is in the root directory
-if [ ! -f /root/.bashrc ]; then
-    cp /etc/skel/.bashrc /root/.bashrc
-    chmod 444 /root/.bashrc
-fi
+cp /etc/skel/.bashrc /root/.bashrc
+chmod 444 /root/.bashrc
 
 # Ensure .profile is in the root directory
-if [ ! -f /root/.profile ]; then
-    cp /etc/skel/.bashrc /root/.profile
-    chmod 444 /root/.profile
-fi
-
-# Ensure ACI is in the root directorys
-cp -r /etc/skel/commands /root/commands
-
-# Enshure ACI _split_string.py is available
-if [ ! -f /usr/local/bin/_split_string ]; then
-    mkdir -p /usr/local/bin
-    ln -s /root/commands/_split_string.py /usr/local/bin/_split_string
-    chmod +x /usr/local/bin/_split_string
-fi
-
-apt-get update
+cp /etc/skel/.bashrc /root/.profile
+chmod 444 /root/.profile
 
 # Start SSH service
 exec /usr/sbin/sshd -D

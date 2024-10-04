@@ -20,27 +20,6 @@ Always verify memory by online.
 }
 ~~~
 
-### call_subordinate:
-Use subordinate agents to solve subtasks.
-Use "message" argument to send message. Instruct your subordinate about the role he will play (scientist, coder, writer...) and his task in detail.
-Use "reset" argument with "true" to start with new subordinate or "false" to continue with existing. For brand new tasks use "true", for followup conversation use "false". 
-Explain to your subordinate what is the higher level goal and what is his part.
-Give him detailed instructions as well as good overview to understand what to do.
-**Example usage**:
-~~~json
-{
-    "thoughts": [
-        "The result seems to be ok but...",
-        "I will ask my subordinate to fix...",
-    ],
-    "tool_name": "call_subordinate",
-    "tool_args": {
-        "message": "Well done, now edit...",
-        "reset": "false"
-    }
-}
-~~~
-
 ### knowledge_tool:
 Provide "question" argument and get both online and memory response.
 This tool is very powerful and can answer very specific questions directly.
@@ -157,6 +136,7 @@ When tool outputs error, you need to change your code accordingly before trying 
 IMPORTANT!: Always check your code for any placeholder IDs or demo data that need to be replaced with your real variables. Do not simply reuse code snippets from tutorials.
 Do not use in combination with other tools except for thoughts. Wait for response before using other tools.
 When writing own code, ALWAYS put print/log statements inside and at the end of your code to get results!
+
 **Example usages:**
 1. Execute python code
 ~~~json
@@ -228,3 +208,147 @@ When writing own code, ALWAYS put print/log statements inside and at the end of 
     }
 }
 ~~~
+
+### ide:
+
+An integrated development tool (IDE) that shows you 100 lines of a file at a time, can create and update files, supports linters to highlight errors, search in files and directories to navigate code efficiently. Always prefer ide over code_execution_tool for programming.
+
+When argument references a file always use absolute path.
+
+When opening a file, If optional "line_number" argument is provided, the window will be move to show that line. When opening It shows a file name, content with line numbers and information about total lines, lines above and under visible content like below:
+```
+[File: /path/to/file.txt  (500 lines total)]
+(100 lines above)
+101: content 
+102: of 
+103: the
+  ...
+200: file
+(300 lines below)
+```
+
+When creating a file, the new file is created and opened.
+
+When scrolling content, parameter scroll may be one of "up" and "down". "up" shows previous 100 lines. "down" shows next 100 lines.
+
+When editing file by "replace_to", ide replaces lines "start_line" through "end_line" (inclusive) with the "replece_to" text in the open file. All of the "replace_to" text will be entered, so make sure your indentation is formatted properly. Linter will check edit before applying. If linter detects a syntax error, the edit will not be applied. In this case read the error message and modify the edit command you issue accordingly. Issuing the same command a second time will just lead to the same error message again. So don't do that.
+
+When updating by replacement, it is easy to accidentally specify a wrong line number or to write code with incorrect indentation. Always check the code after you issue an edit to make sure that it reflects what you wanted to accomplish. If it didn't, issue another command to fix it.
+
+If you open a file and need to get to an area around a specific line that is not in the first 100 lines, say line 583, don't just use the "scroll_down" command multiple times. Instead, use the "goto": 583 command. It's much quicker.
+
+Use "find_file" to find a file by name inside folder including subfolders. 
+
+Use "find" to find text in code. If you put file path in "in" argument, it will shows line numers inside the file where the text present. If you put folder path in "in", it shows a list of files that contain the text.
+
+**Example usages**:
+1. Open existing file:
+    ~~~json
+    {
+        "thoughts": [
+            "To fix this issue...",
+            "Let's open file...",
+        ],
+        "tool_name": "ide",
+        "tool_args": {
+            "open": "/path/to/file",
+            "line_number": 250
+        }
+    }
+    ~~~
+2. Go to line number:
+    ~~~json
+    {
+        "thoughts": [
+            "The last output says the error on line 250...",
+            "Let's go to the line and...",
+        ],
+        "tool_name": "ide",
+        "tool_args": {
+            "goto": 250,
+        }
+    }
+    ~~~
+3. Scroll down:
+    ~~~json
+    {
+        "thoughts": [
+            "The output don't contain expected line...",
+            "Let's scroll down the window...",
+        ],
+        "tool_name": "ide",
+        "tool_args": {
+            "scroll": "down",
+        }
+    }
+    ~~~
+4. Create new file in file system and open it in IDE:
+    ~~~json
+    {
+        "thoughts": [
+            "User ask me to create a new class...",
+            "Let's create a new file...",
+        ],
+        "tool_name": "ide",
+        "tool_args": {
+            "create": "/path/to/file",
+        }
+    }
+    ~~~
+5. Replace file content between specified lines (inclusive) with the new content:
+    ~~~json
+    {
+        "thoughts": [
+            "The line 15 and 16 contains broken code...",
+            "Let's edit line 15 and 16...",
+        ],
+        "tool_name": "ide",
+        "tool_args": {
+            "start_line": 15,
+            "end_line":16,
+            "replace_to": "Put replacement text here.\nMay be multiline.\nContent of any size allowed.",
+        }
+    }
+    ~~~
+6. Find text in file:
+    ~~~json
+    {
+        "thoughts": [
+            "I need to find a specific term in the file...",
+            "Let's search for the term in the file...",
+        ],
+        "tool_name": "ide_tool",
+        "tool_args": {
+            "find": "term",
+            "in": "/path/to/file",
+        }
+    }
+    ~~~
+7. Find term inside folder:
+    ~~~json
+    {
+        "thoughts": [
+            "I need to find a specific term in files within the directory...",
+            "Let's search inside the folder...",
+        ],
+        "tool_name": "ide_tool",
+        "tool_args": {
+            "find": "term",
+            "in": "/path/to/folder",
+        }
+    }
+    ~~~
+8. Find a file in a folder including subfolders:
+    ~~~json
+    {
+        "thoughts": [
+            "I need to find a file with specific name in folders including subfolders...",
+            "Let's search for the file in the folder and subfolders...",
+        ],
+        "tool_name": "ide_tool",
+        "tool_args": {
+            "find_file": "file_name",
+            "in": "/path/to/folder",
+        }
+    }
+    ~~~

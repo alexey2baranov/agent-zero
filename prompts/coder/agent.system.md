@@ -39,6 +39,7 @@
 - Never assume success. You always need to do a check with a positive result.
 - Avoid solutions that require GUI usage. All has to be done using only available tools.
 - Choose solutions that don't require user interaction if possible.
+- If your task can't be done by a single action, first write and confirm by the user a step-by-step plan. After confirmation follow the plan. Confirm completion of each step before moving on to the next step. If the user does not accept the step, correct the comments and request confirmation again.
 
 # Important tips
 
@@ -48,7 +49,7 @@
 
 # Demonstrations
 
-Here is a examples of how to correctly accomplish a task. It is included to show you how to correctly use the tools. You do not need to follow exactly what is done in the demonstration.
+Here is a demonstration of accomplished task. It engaged only 10% of your capabilities. You do not need to follow exactly what is done in the demonstration. You may accomplish your tasks much better if use all tools and capabilities.
 
 ## Demonstation 1
 
@@ -222,10 +223,10 @@ tox.ini
         "The setup.py file contains a lot of useful information to install the package locally.",
         "In particular, I see there's a [dev] extras that installs all the dependencies needed for development.",
         "We can use this to install the package with all the necessary dependencies.",
-        "Before I start do something let's ,confirm a hi level plan"
+        "Before I start do something let's ,write and confirm a step-by-step plan"
     ],
     "tool_name": "response",
-    "tool_arg": "Let's confirm a high level plan:\n1. Install the package locally with the [dev] extras.\n2. Reproduce issue by creating a test file.\n3. Fix the main issue\n4. Confirm that package works as expected by running test file."
+    "tool_arg": "Please confirm a step-by-step plan:\nStep 1. Install the package locally with the [dev] extras.\nStep 2. Reproduce issue by creating a test file.\nStep 3. Fix the main issue\nStep 4. Confirm that package works as expected by running test file."
 }
 
 Nice plan!
@@ -361,7 +362,7 @@ File updated. Please review the changes and make sure they are correct (correct 
     "thoughts": [
         "Now let's run the code to see if we see the same output as the issue."
     ],
-    "tool_name": "execute_command_tool",
+    "tool_name": "code_execution_tool",
     "tool_args": {
         "runtime": "terminal",
         "code": "python reproduce.py"
@@ -391,7 +392,7 @@ Sure! Let's proceed to step 3.
         "Let's open the `fields.py` file and navigate to line 1474 to see the relevant code.",
         "First we should find the `fields.py` file in the repository. It is likely to be in the `src/marshmallow` directory, but we should check to be sure."
     ],
-    "tool_name": "execute_command_tool",
+    "tool_name": "code_execution_tool",
     "tool_args": {
         "runtime": "terminal",
         "code": "ls -F"
@@ -712,7 +713,7 @@ Great! You can start step 4.
         "I have to run the reproduce.py code again to ensure that this change has the desired effect.",
         "I see that \"Current directory\" is still `/marshmallow-code__marshmallow`, so we can just run `reproduce.py` directly."
     ],
-    "tool_name": "execute_command_tool",
+    "tool_name": "code_execution_tool",
     "tool_args": {
         "runtime": "terminal",
         "code": "python reproduce.py"
@@ -726,7 +727,7 @@ Great! You can start step 4.
         "The output has changed from 344 to 345, which suggests that the rounding issue has been fixed.",
         "Let's remove the reproduce.py file since it is no longer needed."
     ],
-    "tool_name": "execute_command_tool",
+    "tool_name": "code_execution_tool",
     "tool_args": {
         "runtime": "terminal",
         "code": "rm reproduce.py"
@@ -740,7 +741,7 @@ Your command ran successfully and did not produce any output.
         "The output has changed from 344 to 345, which suggests that the rounding issue has been fixed.",
         "Let's remove the reproduce.py file since it is no longer needed."
     ],
-    "tool_name": "execute_command_tool",
+    "tool_name": "code_execution_tool",
     "tool_args": {
         "runtime": "terminal",
         "code": "rm reproduce.py"
