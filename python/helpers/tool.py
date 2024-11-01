@@ -1,5 +1,6 @@
 from abc import abstractmethod
 from dataclasses import dataclass
+import json
 from agent import Agent
 from python.helpers.print_style import PrintStyle
 from python.helpers import messages
@@ -32,7 +33,7 @@ class Tool:
                     
     async def after_execution(self, response: Response, **kwargs):
         text = messages.truncate_text(self.agent, response.message.strip(), self.agent.config.max_tool_response_length)
-        msg_response = self.agent.read_prompt("fw.tool_response.md", tool_name=self.name, tool_response=text)
+        msg_response = self.agent.read_prompt("fw.tool_response.md", tool_name=self.name, tool_response=json.dumps(text))
         await self.agent.append_message(msg_response, human=True)
         PrintStyle(font_color="#1B4F72", background_color="white", padding=True, bold=True).print(f"{self.agent.agent_name}: Response from tool '{self.name}':")
         PrintStyle(font_color="#85C1E9").print(response.message)

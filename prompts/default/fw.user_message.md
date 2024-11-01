@@ -1,5 +1,7 @@
 ~~~json
 {
-    "user": "{{message}}"
+    "from": "user",
+    "to": "you",
+    "message": "{{message}}"
 }
 ~~~

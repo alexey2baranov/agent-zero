@@ -5,9 +5,9 @@ from python.helpers import files
 def initialize():
     
     # main chat model used by agents (smarter, more accurate)
-    # chat_llm = models.get_openai_chat(model_name="gpt-4o-mini", temperature=0)
+    # chat_llm = models.get_openai_chat(model_name="gpt-4o", temperature=0)
     # chat_llm = models.get_ollama_chat(model_name="gemma2:latest", temperature=0)
-    # chat_llm = models.get_lmstudio_chat(model_name="lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF", temperature=0)
+    # chat_llm = models.get_lmstudio_chat(model_name="lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf", temperature=0)
     chat_llm = models.get_lmstudio_chat(model_name="deepseek-coder", temperature=0)
     # chat_llm = models.get_openrouter_chat(model_name="mattshumer/reflection-70b:free")
     # chat_llm = models.get_azure_openai_chat(deployment_name="gpt-4o-mini", temperature=0)
@@ -19,7 +19,7 @@ def initialize():
     utility_llm = chat_llm # change if you want to use a different utility model
 
     # embedding model used for memory
-    embedding_llm = models.get_openai_embedding(model_name="text-embedding-3-small")
+    embedding_llm = models.get_openai_embedding(model_name="text-embedding-3-large")
     # embdding_llm= models.get_lmstudio_chat(model_name="lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF", temperature=0)
     # embedding_llm = models.get_ollama_embedding(model_name="nomic-embed-text")
     # embedding_llm = models.get_huggingface_embedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
@@ -30,11 +30,12 @@ def initialize():
         chat_model = chat_llm,
         utility_model = utility_llm,
         embeddings_model = embedding_llm,
-        prompts_subdir = "code-knowledge-agent",
+        # prompts_subdir = "code-knowledge-agent",
+        prompts_subdir = "coder",
         # memory_subdir = "",
         # knowledge_subdir: str = ""
         auto_memory_count = 0,
-        # auto_memory_skip = 2,
+        auto_memory_skip = 0,
         # rate_limit_seconds = 60,
         rate_limit_requests = 15,
         # rate_limit_input_tokens = 0,
@@ -50,7 +51,7 @@ def initialize():
         # code_exec_docker_ports = { "22/tcp": 50022 }
         code_exec_docker_volumes = { 
             files.get_abs_path("work_dir"): {"bind": "/root", "mode": "rw"}, 
-            files.get_base_dir() :{"bind": "/source", "mode": "ro"} 
+            files.get_base_dir() :{"bind": "/agent-zero", "mode": "rw"} ,
         },
         code_exec_ssh_enabled = True,
         # code_exec_ssh_addr = "localhost",

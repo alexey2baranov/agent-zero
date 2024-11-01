@@ -132,8 +132,11 @@ class RepairableException(Exception):
 
 class Agent:
 
+    # class level array list<Agent>
+    agents  : list["Agent"]   = []
+
     def __init__(
-        self, number: int, config: AgentConfig, context: AgentContext | None = None
+        self, number: int, config: AgentConfig, context: AgentContext | None = None, intro= f"n/a", 
     ):
 
         # agent config
@@ -144,7 +147,8 @@ class Agent:
 
         # non-config vars
         self.number = number
-        self.agent_name = f"Agent {self.number}"
+        self.intro = intro
+        self.agent_name = self.get_name()
 
         self.history = []
         self.last_message = ""
@@ -158,7 +162,12 @@ class Agent:
         )
         self.data = {}  # free data object all the tools can use
 
+        Agent.agents.append(self)
+
         os.chdir(files.get_abs_path("./work_dir")) #change CWD to work_dir
+    
+    def get_name(self)->str:
+        return self.intro.split("-")[0].strip()
     
     def build_tools_prompt(self, tools: list[str]):
         if not tools: raise Exception(f"No tools specified for agent {self.agent_name}")
@@ -173,10 +182,11 @@ class Agent:
     async def message_loop(self, msg: str):
         try:
             printer = PrintStyle(italic=True, font_color="#b3ffd9", padding=False)
-            user_message = self.read_prompt("fw.user_message.md", message=msg)
-            await self.append_message(
-                user_message, human=True
-            )  # Append the user's input to the history
+            if msg:
+                user_message = self.read_prompt("fw.user_message.md", message=msg)
+                await self.append_message(
+                    user_message, human=True
+                )  # Append the user's input to the history
             # memories = await self.fetch_memories(True)
             self.memory_skip_counter=0
 
@@ -189,7 +199,7 @@ class Agent:
                 try:
 
                     system = (
-                        self.read_prompt("agent.system.md", agent_name=self.agent_name)
+                        self.read_prompt("agent.system.md", agent_name=self.agent_name, agents= '\n'.join([f"- {agent.intro}" for agent in Agent.agents if agent != self]), agent= self.intro)
                         + "\n\n"
                         + self.read_prompt("agent.tools.md")
                     )
@@ -456,7 +466,7 @@ class Agent:
             await self.handle_intervention()  # wait if paused and handle intervention message if needed
             response = await tool.execute(**tool_args)
             await self.handle_intervention()  # wait if paused and handle intervention message if needed
-            await tool.after_execution(response)
+            await tool.after_execution(response, **tool_args)
             await self.handle_intervention()  # wait if paused and handle intervention message if needed
             if response.break_loop:
                 return response.message

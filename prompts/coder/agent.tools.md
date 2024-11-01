@@ -317,7 +317,7 @@ Use "find" to find text in code. If you put file path in "in" argument, it will 
             "I need to find a specific term in the file...",
             "Let's search for the term in the file...",
         ],
-        "tool_name": "ide_tool",
+        "tool_name": "ide",
         "tool_args": {
             "find": "term",
             "in": "/path/to/file",
@@ -331,7 +331,7 @@ Use "find" to find text in code. If you put file path in "in" argument, it will 
             "I need to find a specific term in files within the directory...",
             "Let's search inside the folder...",
         ],
-        "tool_name": "ide_tool",
+        "tool_name": "ide",
         "tool_args": {
             "find": "term",
             "in": "/path/to/folder",
@@ -345,7 +345,7 @@ Use "find" to find text in code. If you put file path in "in" argument, it will 
             "I need to find a file with specific name in folders including subfolders...",
             "Let's search for the file in the folder and subfolders...",
         ],
-        "tool_name": "ide_tool",
+        "tool_name": "ide",
         "tool_args": {
             "find_file": "file_name",
             "in": "/path/to/folder",
