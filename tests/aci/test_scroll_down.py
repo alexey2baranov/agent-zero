@@ -1,8 +1,8 @@
 import subprocess
 import os
 import pytest
-from python.tools.aci import storage
-from python.tools.aci.constants import WINDOW, OVERLAP
+from python.aci import storage
+from python.aci.constants import WINDOW, OVERLAP
 
 @pytest.fixture
 def clear_state():
@@ -26,7 +26,7 @@ def setup_open_command(test_file, clear_state):
     This prepares the state for testing scroll_down.py.
     """
     subprocess.run(
-        ["python3", "python/tools/aci/open.py", test_file, str(WINDOW)],
+        ["python3", "python/aci/open.py", test_file, str(WINDOW)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True
@@ -39,7 +39,7 @@ def test_scroll_down_command(setup_open_command):
     """
     # Run the scroll_down.py script as a subprocess
     result = subprocess.run(
-        ["python3", "python/tools/aci/scroll_down.py"],
+        ["python3", "python/aci/scroll_down.py"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True

@@ -1,8 +1,8 @@
 import subprocess
 import os
 import pytest
-from python.tools.aci import storage
-from python.tools.aci.constants import WINDOW
+from python.aci import storage
+from python.aci.constants import WINDOW
 
 @pytest.fixture
 def clear_state():
@@ -26,7 +26,7 @@ def setup_open_command(test_file, clear_state):
     This prepares the state for testing goto.py.
     """
     subprocess.run(
-        ["python3", "python/tools/aci/open.py", test_file, str(WINDOW // 2)],
+        ["python3", "python/aci/open.py", test_file, str(WINDOW // 2)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True
@@ -39,7 +39,7 @@ def test_goto_command(setup_open_command):
     """
     # Run the goto.py script as a subprocess to go to line 50
     result = subprocess.run(
-        ["python3", "python/tools/aci/goto.py", "500"],
+        ["python3", "python/aci/goto.py", "500"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True

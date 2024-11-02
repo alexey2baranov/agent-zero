@@ -1,8 +1,8 @@
 import subprocess
 import os
 import pytest
-from python.tools.aci import storage
-from python.tools.aci.constants import WINDOW
+from python.aci import storage
+from python.aci.constants import WINDOW
 
 @pytest.fixture
 def clear_state():
@@ -29,7 +29,7 @@ def setup_open_command(test_file, clear_state):
     This prepares the state for testing edit.py.
     """
     subprocess.run(
-        ["python3", "python/tools/aci/open.py", test_file],
+        ["python3", "python/aci/open.py", test_file],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True
@@ -42,7 +42,7 @@ def test_edit_command_no_lint_errors(setup_open_command):
     """
     # Edit the test file at lines 10-15 and replace with "Edited Line"
     result = subprocess.run(
-        ["python3", "python/tools/aci/edit_linting.py", "10", "15", """def some_function():
+        ["python3", "python/aci/edit_linting.py", "10", "15", """def some_function():
     print('Edited Line')
     print('Edited Line')
     print('Edited Line')
@@ -83,7 +83,7 @@ def test_edit_command_with_lint_errors(setup_open_command):
     """
     # Edit the test file at lines 10-15 and replace with invalid Python code
     result = subprocess.run(
-        ["python3", "python/tools/aci/edit_linting.py", "100", "115", "def invalid_code(:\n"],
+        ["python3", "python/aci/edit_linting.py", "100", "115", "def invalid_code(:\n"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True

@@ -3,6 +3,8 @@
 import os
 import argparse
 import subprocess
+
+from pyparsing import line
 from helpers import _print, _constrain_line
 import storage
 from constants import WINDOW  # Import the WINDOW constant
@@ -54,9 +56,12 @@ def edit():
     start_line = args.start_line - 1  # Adjust for 0-indexing
     end_line = args.end_line - 1      # Adjust for 0-indexing (Python slices exclude end)
 
-    if start_line < 0 or end_line >= len(lines):
+    if start_line < 0 or end_line > len(lines):
         print(f"Line range {args.start_line}:{args.end_line} is out of bounds for the file.")
         return
+    elif start_line== len(lines) and end_line== len(lines):
+        lines.append("")
+    
 
     # Backup the current file in /root/ with the basename and _backup appended
     backup_file = os.path.join("~", f"{os.path.basename(current_file)}_backup")

@@ -6,7 +6,7 @@ import storage
 from helpers import _constrain_line, _print
 from constants import WINDOW
 
-def open_file():
+def open_file(file: str | None = None):
     """
     Opens the file and optionally navigates to a specific line. Stores the file and line in the state.
     """
@@ -15,14 +15,16 @@ def open_file():
     parser.add_argument("line_number", type=int, nargs="?", default=None, help="The line number to start from (optional)")
     args = parser.parse_args()
 
+    file= file or args.file
+
     # Check if the file exists
-    if not os.path.exists(args.file):
-        print(f"File {args.file} not found")
+    if not os.path.exists(file):
+        print(f"File {file} not found")
         return
 
     # Handle if a directory is passed instead of a file
-    if os.path.isdir(args.file):
-        print(f"Error: {args.file} is a directory. You can only open files.")
+    if os.path.isdir(file):
+        print(f"Error: {file} is a directory. You can only open files.")
         return
     
     state= storage.load_state()
@@ -38,7 +40,7 @@ def open_file():
 
     # Store CURRENT_FILE and CURRENT_LINE in the state
     state = {
-        "CURRENT_FILE": os.path.realpath(args.file),
+        "CURRENT_FILE": os.path.realpath(file),
         "CURRENT_LINE": line_number
     }
     storage.save_state(state)

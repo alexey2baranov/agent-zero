@@ -31,7 +31,7 @@ def _constrain_line():
     # Constrain the current line based on the window size
     half_window = window // 2
     current_line = max(half_window, current_line)
-    current_line = min(current_line, total_lines - half_window)
+    current_line = min(current_line, total_lines)
 
     # Store the updated CURRENT_LINE back into the state
     state['CURRENT_LINE'] = current_line
