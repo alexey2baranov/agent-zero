@@ -1,9 +1,10 @@
 import asyncio
+from dataclasses import replace
 import sys
 import threading, time, models, os
 from ansio import application_keypad, mouse_input, raw_input
 from ansio.input import InputEvent, get_input_event
-from agent import AgentContext
+from agent import Agent, AgentContext
 from python.helpers.print_style import PrintStyle
 from python.helpers.files import read_file
 from python.helpers import files
@@ -98,7 +99,29 @@ if __name__ == "__main__":
 
     # initialize context
     config = initialize()
-    context = AgentContext(config)
+    
+    # setup 1: dev choose best language for LLM Agents
+    # context = AgentContext(config)
+    # context.agent0.intro="Python Developer - Senior Python developer responsible for writing and testing Python code.-"
+    # context.agent0.agent_name= context.agent0.get_name()
+    # go_developer= Agent(1, config, context, "Golang Developer - Intern Golang developer responsible for writing and testing Golang code.")
+    # js_developer= Agent(1, config, context, "Javascript Developer - Intern Javascript developer responsible for writing and testing Golang code.")
+    # fartran_developer= Agent(1, config, context, "Fartran Developer - Intern Fartran developer responsible for writing and testing Golang code.")
+
+
+    # setup 2: develop Snake game
+    context = AgentContext(replace(config, prompts_subdir="architect"))
+    context.agent0.intro="Architect - designing Module Architecture"
+    context.agent0.agent_name= context.agent0.get_name()
+
+
+    # setup 3: Single developer
+    # context = AgentContext(replace(config, prompts_subdir="developer"))
+    # context.agent0.intro="Developer - Develop python code"
+    # context.agent0.agent_name= context.agent0.get_name()
+
+
+
 
     # Start the key capture thread for user intervention during agent streaming
     threading.Thread(target=capture_keys, daemon=True).start()

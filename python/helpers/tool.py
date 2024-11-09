@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import json
 from agent import Agent
 from python.helpers.print_style import PrintStyle
-from python.helpers import messages
+from python.helpers import files, messages
 
 @dataclass
 class Response:
@@ -44,3 +44,12 @@ class Tool:
         words = [words[0].capitalize()] + [word.lower() for word in words[1:]]
         result = ' '.join(words)
         return result
+    
+    def read_prompt(self, file: str, prompts_subdir= "default", **kwargs):
+        content = files.read_file(
+            files.get_abs_path(
+                f"./prompts/{prompts_subdir}/{file}"
+            ),
+            **kwargs,
+        )
+        return content

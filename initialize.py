@@ -31,7 +31,8 @@ def initialize():
         utility_model = utility_llm,
         embeddings_model = embedding_llm,
         # prompts_subdir = "code-knowledge-agent",
-        prompts_subdir = "coder",
+        # prompts_subdir = "coder",
+        prompts_subdir = "teammate",
         # memory_subdir = "",
         # knowledge_subdir: str = ""
         auto_memory_count = 0,
@@ -40,7 +41,7 @@ def initialize():
         rate_limit_requests = 15,
         # rate_limit_input_tokens = 0,
         # rate_limit_output_tokens = 0,
-        # msgs_keep_max = 25,
+        msgs_keep_max = 250,
         msgs_keep_start = 0,
         # msgs_keep_end = 10,
         max_tool_response_length = 3000,

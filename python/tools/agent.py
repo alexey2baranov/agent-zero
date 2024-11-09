@@ -12,6 +12,6 @@ class AgentTool(Tool):
     async def create(self, **kwargs)-> str:
         for agent_info in kwargs['create']:
             agent_config= replace(self.agent.config, prompts_subdir=agent_info["role"])
-            Agent(self.agent.number+1, agent_config, self.agent.context, intro= agent_info["intro"])
+            Agent(self.agent.number+1, agent_config, self.agent.context, intro= agent_info["name"])
 
         return f"{len(kwargs['create'])} Agents created"

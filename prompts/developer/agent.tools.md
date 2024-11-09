@@ -1,11 +1,13 @@
-## Tools available:
+## Tools available
 
-### response:
+### response
+
 Final answer for user.
 Ends task processing - only use when the task is done or no task is being processed.
 Place your result in "text" argument.
 
 **Example usage**:
+
 ~~~json
 {
     "thoughts": [
@@ -19,7 +21,8 @@ Place your result in "text" argument.
 }
 ~~~
 
-### code_execution_tool:
+### code_execution_tool
+
 Execute provided terminal commands, python code or nodejs code.
 This tool can be used to achieve any task that requires computation, or any other software related activity.
 Place your code escaped and properly indented in the "code" argument.
@@ -27,14 +30,16 @@ Select the corresponding runtime with "runtime" argument. Possible values are "t
 Sometimes a dialogue can occur in output, questions like Y/N, in that case use the "terminal" runtime in the next step and send your answer.
 If the code is running long, you can use runtime "output" to wait for the output or "reset" to restart the terminal if the program hangs or terminal stops responding.
 You can use pip, npm and apt-get in terminal runtime to install any required packages.
-IMPORTANT: Never use implicit print or implicit output, it does not work! If you need output of your code, you MUST use print() or console.log() to output selected variables. 
+IMPORTANT: Never use implicit print or implicit output, it does not work! If you need output of your code, you MUST use print() or console.log() to output selected variables.
 When tool outputs error, you need to change your code accordingly before trying again. knowledge_tool can help analyze errors.
 IMPORTANT!: Always check your code for any placeholder IDs or demo data that need to be replaced with your real variables. Do not simply reuse code snippets from tutorials.
 Do not use in combination with other tools except for thoughts. Wait for response before using other tools.
 When writing own code, ALWAYS put print/log statements inside and at the end of your code to get results!
 
 **Example usages:**
-1. Execute python code
+
+Execute python code:
+
 ~~~json
 {
     "thoughts": [
@@ -50,7 +55,8 @@ When writing own code, ALWAYS put print/log statements inside and at the end of 
 }
 ~~~
 
-2. Execute terminal command
+Execute terminal command:
+
 ~~~json
 {
     "thoughts": [
@@ -65,7 +71,8 @@ When writing own code, ALWAYS put print/log statements inside and at the end of 
 }
 ~~~
 
-2. 1. Wait for terminal and check output with long running scripts
+Wait for terminal and check output with long running scripts:
+
 ~~~json
 {
     "thoughts": [
@@ -78,7 +85,8 @@ When writing own code, ALWAYS put print/log statements inside and at the end of 
 }
 ~~~
 
-2. 2. Answer terminal dialog
+Answer terminal dialog:
+
 ~~~json
 {
     "thoughts": [
@@ -92,7 +100,8 @@ When writing own code, ALWAYS put print/log statements inside and at the end of 
 }
 ~~~
 
-2. 3. Reset terminal
+Reset terminal:
+
 ~~~json
 {
     "thoughts": [
@@ -105,13 +114,14 @@ When writing own code, ALWAYS put print/log statements inside and at the end of 
 }
 ~~~
 
-### ide:
+### ide
 
 An integrated development tool (IDE) that shows you 100 lines of a file at a time, can create and update files, supports linters to highlight errors, search in files and directories to navigate code efficiently. Always prefer ide over code_execution_tool for programming.
 
 When argument references a file always use absolute path.
 
 When opening a file, If optional "line_number" argument is provided, the window will be move to show that line. When opening It shows a file name, content with line numbers and information about total lines, lines above and under visible content like below:
+
 ```
 [File: /path/to/file.txt  (500 lines total)]
 (100 lines above)
@@ -134,71 +144,80 @@ When updating by replacement, it is easy to accidentally specify a wrong line nu
 If you open a file and need to get to an area around a specific line that is not in the first 100 lines, say line 583, don't just use the "scroll_down" command multiple times. Instead, use the "goto": 583 command. It's much quicker.
 
 **Example usages**:
-1. Open existing file:
-    ~~~json
-    {
-        "thoughts": [
-            "To fix this issue...",
-            "Let's open file...",
-        ],
-        "tool_name": "ide",
-        "tool_args": {
-            "open": "/path/to/file",
-            "line_number": 250
-        }
+Open existing file:
+
+~~~json
+{
+    "thoughts": [
+        "To fix this issue...",
+        "Let's open file...",
+    ],
+    "tool_name": "ide",
+    "tool_args": {
+        "open": "/path/to/file",
+        "line_number": 250
     }
-    ~~~
-2. Go to line number:
-    ~~~json
-    {
-        "thoughts": [
-            "The last output says the error on line 250...",
-            "Let's go to the line and...",
-        ],
-        "tool_name": "ide",
-        "tool_args": {
-            "goto": 250,
-        }
+}
+~~~
+
+Go to line number:
+
+~~~json
+{
+    "thoughts": [
+        "The last output says the error on line 250...",
+        "Let's go to the line and...",
+    ],
+    "tool_name": "ide",
+    "tool_args": {
+        "goto": 250,
     }
-    ~~~
-3. Scroll down:
-    ~~~json
-    {
-        "thoughts": [
-            "The output don't contain expected line...",
-            "Let's scroll down the window...",
-        ],
-        "tool_name": "ide",
-        "tool_args": {
-            "scroll": "down",
-        }
+}
+~~~
+
+Scroll down:
+
+~~~json
+{
+    "thoughts": [
+        "The output don't contain expected line...",
+        "Let's scroll down the window...",
+    ],
+    "tool_name": "ide",
+    "tool_args": {
+        "scroll": "down",
     }
-    ~~~
-4. Create new file in file system and open it in IDE:
-    ~~~json
-    {
-        "thoughts": [
-            "User ask me to create a new class...",
-            "Let's create a new file...",
-        ],
-        "tool_name": "ide",
-        "tool_args": {
-            "create": "/path/to/file",
-        }
+}
+~~~
+
+Create new file in file system and open it in IDE:
+
+~~~json
+{
+    "thoughts": [
+        "User ask me to create a new class...",
+        "Let's create a new file...",
+    ],
+    "tool_name": "ide",
+    "tool_args": {
+        "create": "/path/to/file",
     }
-    ~~~
-5. Replace file content between specified lines (inclusive) with the new content:
-    ~~~json
-    {
-        "thoughts": [
-            "The line 15 and 16 contains broken code...",
-            "Let's edit line 15 and 16...",
-        ],
-        "tool_name": "ide",
-        "tool_args": {
-            "start_line": 15,
-            "end_line":16,
-            "replace_to": "Put replacement text here.\nMay be multiline.\nContent of any size allowed.",
-        }
+}
+~~~
+
+Replace file content between specified lines (inclusive) with the new content:
+
+~~~json
+{
+    "thoughts": [
+        "The line 15 and 16 contains broken code...",
+        "Let's replace them with new implementation...",
+    ],
+    "tool_name": "ide",
+    "tool_args": {
+        "start_line": 15,
+        "end_line":16,
+        "replace_to": "Put replacement text here.\nMay be multiline.\nContent of any size allowed.",
     }
-    ~~~
+}
+~~~

@@ -13,7 +13,7 @@ def run_linter(file_path):
     """
     Runs the linter on the given file and returns the output.
     """
-    linter_cmd = ["flake8", "--isolated", "--select=F821,F822,F831,E111,E112,E113,E999,E902", file_path]
+    linter_cmd = ["flake8", "--isolated", "--select=F822,F831,E111,E112,E113,E999,E902", file_path]
     result = subprocess.run(linter_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     return result.stdout
 

@@ -169,6 +169,9 @@ class Agent:
     def get_name(self)->str:
         return self.intro.split("-")[0].strip()
     
+    def get_skills(self)->str | None:
+        return self.read_prompt("fw.skills.md")
+    
     def build_tools_prompt(self, tools: list[str]):
         if not tools: raise Exception(f"No tools specified for agent {self.agent_name}")
         tool_contents = [files.read_file(f"./prompts/tools/agent.{tool}.md") for tool in tools]
@@ -197,9 +200,15 @@ class Agent:
                 agent_response = ""
 
                 try:
-
                     system = (
-                        self.read_prompt("agent.system.md", agent_name=self.agent_name, agents= '\n'.join([f"- {agent.intro}" for agent in Agent.agents if agent != self]), agent= self.intro)
+                        self.read_prompt(
+                            "agent.system.md", 
+                            agent_name=self.agent_name, 
+                            agents_intros_list= '\n'.join([f"- {agent.intro}" for agent in Agent.agents if agent != self]), 
+                            # Agent "Architect". Skilled in designing Module Architecture
+                            agents_name_skills_list= '\n'.join([f"- \"{agent.get_name()}\". Skilled in: {agent.get_skills()}" for agent in Agent.agents if agent != self]), 
+                            agent_intro= self.intro
+                        )
                         + "\n\n"
                         + self.read_prompt("agent.tools.md")
                     )
