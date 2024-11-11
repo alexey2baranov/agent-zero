@@ -24,17 +24,21 @@ class TeamTool(Tool):
     async def create(self, **kwargs)-> str:
         team_info = kwargs['create']
         
-        agents = [agent for agent in Agent.agents if agent.get_name() in team_info['members']]
-        agents.insert(0, self.agent)
+        missing_members = [member for member in team_info['members'] if member not in [agent.get_name() for agent in Agent.agents]]
+        if (missing_members):
+            return f"Agents {', '.join(missing_members)} not found. A full list of agents is: {', '.join([agent.get_name() for agent in Agent.agents])}. Create required Agents first."
+        
+        members = [agent for agent in Agent.agents if agent.get_name() in team_info['members']]
+        members.insert(0, self.agent)
 
         # create a copy of self.agent.config with the overwritten property prompts_subdir
         moderator_config= replace(self.agent.config, prompts_subdir="moderator")
 
         moderator = Agent(self.agent.number+1, moderator_config, self.agent.context, intro="Moderator - Moderates the teamwork of Agents")
 
-        team = Team(team_info['id'], agents, team_info['goal'], moderator)
+        team = Team(team_info['id'], members, team_info['goal'], moderator)
 
-        for agent in [*agents, moderator]:
+        for agent in [*members, moderator]:
             # add team to agent's data
             teams : list = agent.get_data("teams")
             if not teams:
@@ -47,16 +51,31 @@ class TeamTool(Tool):
             team_created_message= self.agent.read_prompt(
                 "fw.team_created.md", 
                 id= json.dumps(team_info['id'], ensure_ascii=False), 
-                creator=json.dumps(self.agent.get_name(), ensure_ascii=False), 
+                creator=json.dumps(self.agent.get_name(), ensure_ascii=False),
                 goal= json.dumps("\n"+team_info['goal'], ensure_ascii=False), 
                 members=json.dumps([{
                     "name": agent.get_name(), 
-                    "skills": self.read_prompt("fw.skills.md", agent.config.prompts_subdir),
-                    } for agent in agents], ensure_ascii=False)
+                    "skills": agent.get_skills(),
+                    } for agent in members], ensure_ascii=False)
             )
             await agent.append_message(team_created_message, True)
     
         return "Team created"
+    
+    async def run(self, **kwargs):
+        """
+        Run team work
+        """
+
+        team_id= kwargs["run"]
+        teams: list[Team] = self.agent.get_data("teams") or []
+        team= next((team for team in teams if team.id==team_id))
+        if not team:
+            return f"Team {team_id} not found. Available teams: {", ".join([team.id for team in teams])}"
+        
+        response= await team.moderator.message_loop("Moderator, do your job")
+
+        return response
 
     async def give_word(self, **kwargs) -> str:
         """ 
@@ -93,10 +112,3 @@ class TeamTool(Tool):
                 await member.append_message(talker_talk_as_team_message, True)
 
         return talker_talk
-        
-
-    async def after_execution(self, response: Response, **kwargs):
-        await super().after_execution(response, **kwargs)
-        if 'create' in kwargs:
-            team: Team = next((team for team in self.agent.get_data("teams") if team.id==kwargs["create"]["id"]))
-            await team.moderator.message_loop("Do your job")

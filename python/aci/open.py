@@ -15,7 +15,11 @@ def open_file(file: str | None = None):
     parser.add_argument("line_number", type=int, nargs="?", default=None, help="The line number to start from (optional)")
     args = parser.parse_args()
 
-    file= file or args.file
+    file = file or args.file
+
+    if not file:
+        print ("Usage: open <file> [line_number]")
+        return
 
     # Check if the file exists
     if not os.path.exists(file):

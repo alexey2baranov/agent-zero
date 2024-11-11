@@ -16,7 +16,7 @@ def create():
 
     # Check if `file` is an absolute path, but not relative
     if not os.path.isabs(args.filename):
-        print(f"Error: Please use absolute paths for `create` arg'{args.filename}'")
+        print(f"Error: Please use absolute paths for `path` arg {args.filename}'")
     # Check if the file already exists
     elif os.path.exists(args.filename):
         print(f"Error: File '{args.filename}' already exists.")

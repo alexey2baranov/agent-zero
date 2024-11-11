@@ -20,7 +20,7 @@
             "args": [
                 "-Xfrozen_modules=off"
             ],
-            "justMyCode": false
+            "justMyCode": true
         },
         {
             "name": "Debug current file",
