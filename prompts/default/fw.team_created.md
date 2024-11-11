@@ -1,7 +1,8 @@
 ~~~json
 {
     "from": {{creator}},
-    "message": "I have created a new team that works strictly according to the Team Work Rules.",
+    "to": {{id}},
+    "message": "I have created a Moderated Team where all Agents works strictly according to the Moderated Team Rules.",
     "team_info":{
         "id": {{id}},.
         "members": {{members}},

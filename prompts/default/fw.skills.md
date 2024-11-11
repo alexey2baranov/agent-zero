@@ -1,0 +1,1 @@
+Solving general task

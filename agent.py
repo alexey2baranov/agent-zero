@@ -1,5 +1,7 @@
 import asyncio
 from dataclasses import dataclass, field
+import re
+import sys
 import time, importlib, inspect, os, json
 from typing import Any, Optional, Dict
 import uuid
@@ -14,6 +16,7 @@ from langchain_core.embeddings import Embeddings
 import python.helpers.log as Log
 from python.helpers.dirty_json import DirtyJson
 from python.helpers.defer import DeferredTask
+from python.helpers.locks import input_lock
 
 
 class AgentContext:
@@ -208,9 +211,7 @@ class Agent:
                             # Agent "Architect". Skilled in designing Module Architecture
                             agents_name_skills_list= '\n'.join([f"- \"{agent.get_name()}\". Skilled in: {agent.get_skills()}" for agent in Agent.agents if agent != self]), 
                             agent_intro= self.intro
-                        )
-                        + "\n\n"
-                        + self.read_prompt("agent.tools.md")
+                        ).strip()
                     )
                     memories = await self.fetch_memories()
                     if memories:
@@ -325,6 +326,14 @@ class Agent:
                     ),
                     **kwargs,
                 )
+                
+                while True:
+                    entrances = re.findall(r"{%\s*[\w\d\-\.]+\s*%}", content)
+                    if not entrances:
+                        break
+                    for entrance in entrances:
+                        key = entrance[2:-2].strip()
+                        content = content.replace(entrance, self.read_prompt(key, **kwargs)).strip()
             except Exception as e:
                 pass
         if not content:
@@ -554,3 +563,18 @@ class Agent:
 
     def call_extension(self, name: str, **kwargs) -> Any:
         pass
+
+
+class UserProxy (Agent):
+    async def message_loop(self, msg: str):
+        with input_lock:
+            streaming_agent= self.context.streaming_agent
+            self.context.streaming_agent= None
+
+            PrintStyle(background_color="#6C3483", font_color="white", bold=True, padding=True).print(f"User:")        
+            if sys.platform != "win32": import readline # this fixes arrow keys in terminal
+            user_input = input("> ").strip()
+            PrintStyle(font_color="white", padding=False, log_only=True).print(f"> {user_input}")        
+
+            self.context.streaming_agent=streaming_agent
+            return user_input

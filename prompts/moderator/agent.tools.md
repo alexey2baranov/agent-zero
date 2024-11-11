@@ -1,25 +1,6 @@
 ## Tools available
 
-### response
-
-Final answer for user.
-Ends task processing - only use when the task is done.
-Place your result in "text" argument.
-
-**Example usage**:
-
-~~~json
-{
-    "thoughts": [
-        "The user has greeted me...",
-        "I will...",
-    ],
-    "tool_name": "response",
-    "tool_args": {
-        "text": "Hi...",
-    }
-}
-~~~
+{% agent.tool.response.md %}
 
 ### team
 
@@ -27,8 +8,9 @@ This is the main tool for moderation. Each turn you can give a word to a single 
 
 **args**:
 
-- to: Agent you want to give a word to. For example "CEO", "Architect", etc.
-- message: message you want to say to Agent. Start it from the Agent's name. For example if you give a word to a CEO, then message should looks like "CEO, ...".
+- give_word: give a word to a team member
+  - to: Agent you want to give a word to. For example "CEO", "Architect", etc.
+  - message: message you want to say to Agent. Start it from the Agent's name. For example if you give a word to a CEO, then message should looks like "CEO, ...".
 
 **Example usage**:
 
