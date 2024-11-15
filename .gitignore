@@ -32,3 +32,5 @@ knowledge/*
 !knowledge/.gitkeep
 
 docker/aci
+
+/temp
