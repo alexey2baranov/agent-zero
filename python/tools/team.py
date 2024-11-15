@@ -1,6 +1,8 @@
 from dataclasses import replace
 import json
 
+from click import group
+
 from agent import Agent
 from python.helpers import files
 from python.helpers.tool import Tool, Response
@@ -18,6 +20,8 @@ class TeamTool(Tool):
             return Response(await self.create(**kwargs), False)
         elif 'give_word' in kwargs:
             return Response(await self.give_word(**kwargs), False)
+        elif "run" in kwargs:
+            return Response(await self.run(**kwargs), False)
         else:
             return Response(message="Invalid tool argument", break_loop=False)
 
@@ -66,12 +70,25 @@ class TeamTool(Tool):
         """
         Run team work
         """
+        if ("id" not in kwargs["run"] or "message" not in kwargs["run"]):
+            return f'Usage: "run": {"id": "<team_id>", "message": "<message>"}'
 
-        team_id= kwargs["run"]
+        team_id= kwargs["run"]["id"]
         teams: list[Team] = self.agent.get_data("teams") or []
         team= next((team for team in teams if team.id==team_id))
         if not team:
             return f"Team {team_id} not found. Available teams: {", ".join([team.id for team in teams])}"
+        
+        # append starter message to all members except talker (talker will see answer in his chain of thought, moderator will see answer in give_word tool response)
+        runner_message_as_team_message = self.agent.read_prompt(
+            'fw.team_message.md',
+            fromm=json.dumps(self.agent.get_name(), ensure_ascii=False), 
+            to=json.dumps(team.id, ensure_ascii=False), 
+            message=json.dumps(kwargs["run"]["message"], ensure_ascii=False),
+        )
+        for member in [*team.members, team.moderator]:
+            if member != self.agent:
+                await member.append_message(runner_message_as_team_message, True)
         
         response= await team.moderator.message_loop("Moderator, do your job")
 

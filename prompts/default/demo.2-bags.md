@@ -13,8 +13,14 @@ Human:
             {"name": "Coordinator", "skills": "Logistics"},
             {"name": "Carrier", "skills": "Carrying cargo"}
         ],
-        "goal": "Place 2 bags on the table"
+        "goal": "2 bags on the table"
     }
+}
+
+{
+    "from": "Coordinator",
+    "to": "CARGO_HANDLING",
+    "message": "Hi guys! User ordered me to place 2 bags on the table. I created this team to do this together. Our goal - 2 bags on the table."
 }
 
 {

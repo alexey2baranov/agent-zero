@@ -11,6 +11,7 @@ This tool allows you to manage a team of agents that works strictly according to
 
 - run - user for running team work
   - id - id of the team you want to run.
+  - message - kick-off message for team members.
 
 **Example usage**:
 
@@ -19,7 +20,7 @@ AI:
 ~~~json
 {
     "thoughts": [
-        "User asked me to to implement a new feature within a team.",
+        "User asked me to to implement a new feature.",
         "First, I will use `team` tool with `create` arg to create a team."
     ],
     "tool": "team",
@@ -50,7 +51,8 @@ AI:
     "tool": "team",
     "tool_args": {
         "run": {
-            "id": "NEW_FEATURE"
+            "id": "NEW_FEATURE",
+            "message": "Hi guys! User ordered me to create a new feature. I created this team to do this together. Our goal - new implemented feature in code base."
         }
     }
 }
