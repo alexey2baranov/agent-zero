@@ -31,7 +31,7 @@ AI:
         "The goal is to place 2 bags on the table.",
         "The team members include the Coordinator and the Carrier.",
         "According to Moderated Team Rules first if team does not have a plan, I need to organize plan approval",
-        "Since there is no plan yet, the Carrier, as the agent with the most relevant skills in cargo handling, should propose a plan."
+        "Since there is no plan yet, the Carrier, as the agent with skills most aligned to the team's goal, should propose a plan."
     ],
     "tool_name": "team",
     "tool_args": {

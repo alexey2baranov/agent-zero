@@ -1,1 +1,1 @@
-Coordinating the agents to work effectively
+- Effective agents coordination

@@ -1,1 +1,1 @@
-Solving general task
+- General skills

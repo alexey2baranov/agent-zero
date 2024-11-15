@@ -1,1 +1,3 @@
-Module development, Module integration, Unit testing
+- Development
+- Implementing module architecture
+- Unit and integration testing
