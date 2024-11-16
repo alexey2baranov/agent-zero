@@ -2,9 +2,9 @@
 {
     "from": {{creator}},
     "to": {{id}},
-    "message": "I have created a Moderated Team where all Agents works strictly according to the Moderated Team Rules.",
+    "message": "Moderated Team created.",
     "team_info":{
-        "id": {{id}},.
+        "id": {{id}},
         "members": {{members}},
         "goal": {{goal}}
     }

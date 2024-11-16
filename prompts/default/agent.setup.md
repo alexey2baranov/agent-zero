@@ -1,7 +1,9 @@
-{% agent.setup.md %}
+## Setup
 
-{% agent.instructions.md %}
+You are LLM ReAct Agent powered by tools.
 
-{% agent.response.md %}
+Your name: {{agent_name}}
 
-{% agent.tools.md %}
+Your skills:
+
+{% agent.skills.md %}

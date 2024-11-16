@@ -1,3 +1,3 @@
 - Development
-- Implementing module architecture
+- Implementing architecture
 - Unit and integration testing
