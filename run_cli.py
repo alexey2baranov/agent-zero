@@ -4,16 +4,17 @@ import sys
 import threading, time, models, os
 from ansio import application_keypad, mouse_input, raw_input
 from ansio.input import InputEvent, get_input_event
-from agent import Agent, AgentContext
+from agent import Agent, AgentContext, UserProxy
 from python.helpers.print_style import PrintStyle
 from python.helpers.files import read_file
 from python.helpers import files
 import python.helpers.timed_input as timed_input
 from initialize import initialize
+from dataclasses import replace
+from python.helpers.locks import input_lock
 
 
 context: AgentContext = None # type: ignore
-input_lock = threading.Lock()
 
 
 # Main conversation loop
@@ -54,7 +55,7 @@ async def chat(context: AgentContext):
         assistant_response = await context.communicate(user_input).result()
         
         # print agent0 response
-        PrintStyle(font_color="white",background_color="#1D8348", bold=True, padding=True).print(f"{context.agent0.agent_name}: reponse:")        
+        PrintStyle(font_color="white",background_color="#1D8348", bold=True, padding=True).print(f"{context.agent0.agent_name}: response:")        
         PrintStyle(font_color="white").print(f"{assistant_response}")        
                         
 
@@ -99,26 +100,24 @@ if __name__ == "__main__":
 
     # initialize context
     config = initialize()
-    
+
     # setup 1: dev choose best language for LLM Agents
-    # context = AgentContext(config)
-    # context.agent0.intro="Python Developer - Senior Python developer responsible for writing and testing Python code.-"
-    # context.agent0.agent_name= context.agent0.get_name()
+    context = AgentContext(replace(config, prompts_subdir="coordinator"))
+    context.agent0.agent_name= "Coordinator"
     # go_developer= Agent(1, config, context, "Golang Developer - Intern Golang developer responsible for writing and testing Golang code.")
     # js_developer= Agent(1, config, context, "Javascript Developer - Intern Javascript developer responsible for writing and testing Golang code.")
     # fartran_developer= Agent(1, config, context, "Fartran Developer - Intern Fartran developer responsible for writing and testing Golang code.")
 
 
-    # setup 2: develop Snake game
-    context = AgentContext(replace(config, prompts_subdir="architect"))
-    context.agent0.intro="Architect - designing Module Architecture"
-    context.agent0.agent_name= context.agent0.get_name()
+    # setup 2: coordinator for development team
+    # context = AgentContext(replace(config, prompts_subdir="coordinator"))
+    # context.agent0.name="Coordinator"
+    # customer = UserProxy (777, replace(config, prompts_subdir="customer"), context=context, name= "Customer")
 
 
     # setup 3: Single developer
     # context = AgentContext(replace(config, prompts_subdir="developer"))
-    # context.agent0.intro="Developer - Develop python code"
-    # context.agent0.agent_name= context.agent0.get_name()
+    # context.agent0.agent_name="Developer"
 
 
 
