@@ -139,7 +139,7 @@ class Agent:
     agents  : list["Agent"]   = []
 
     def __init__(
-        self, number: int, config: AgentConfig, context: AgentContext | None = None, intro= f"n/a", 
+        self, number: int, config: AgentConfig, context: AgentContext | None = None, agent_name= f"n/a", 
     ):
 
         # agent config
@@ -150,8 +150,7 @@ class Agent:
 
         # non-config vars
         self.number = number
-        self.intro = intro
-        self.agent_name = self.get_name()
+        self.agent_name = agent_name
 
         self.history = []
         self.last_message = ""
@@ -169,11 +168,8 @@ class Agent:
 
         os.chdir(files.get_abs_path("./work_dir")) #change CWD to work_dir
     
-    def get_name(self)->str:
-        return self.intro.split("-")[0].strip()
-    
     def get_skills(self)->list[str]:
-        skills_str= self.read_prompt("fw.skills.md")
+        skills_str= self.read_prompt("agent.skills.md")
 
         return [line.split('-')[-1].strip() for line in skills_str.split('\n')]
 

@@ -13,13 +13,13 @@ class AgentTool(Tool):
             return Response(message="Invalid tool argument", break_loop=False)
 
     async def list(self, **kwargs)-> str:
-        return json.dumps([{ "name": agent.get_name(), "role": agent.config.prompts_subdir }  for agent in Agent.agents])
+        return json.dumps([{ "name": agent.agent_name, "role": agent.config.prompts_subdir }  for agent in Agent.agents])
     
     async def create(self, **kwargs)-> str:
         if not isinstance(kwargs['create'], list):
             return "`create` arg must be an array"
         for agent_info in kwargs['create']:
             agent_config= replace(self.agent.config, prompts_subdir=agent_info["role"])
-            Agent(self.agent.number+1, agent_config, self.agent.context, intro= agent_info["name"])
+            Agent(self.agent.number+1, agent_config, self.agent.context, agent_name= agent_info["name"])
 
         return f"{len(kwargs['create'])} Agents created"
