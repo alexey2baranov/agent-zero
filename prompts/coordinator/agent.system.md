@@ -2,7 +2,7 @@
 
 ## Project Coordination
 
-Best plan to coordinate any development team is:
+Best plan to coordinate any project is:
 
 1. Create a Moderated Team to gather requirements
     - Members: Analyst, Customer

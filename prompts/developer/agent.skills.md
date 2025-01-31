@@ -1,3 +1,2 @@
-- Development
-- Implementing architecture
-- Unit and integration testing
+- Writing code to implement provided Solution Architecture
+- Writing and running unit tests

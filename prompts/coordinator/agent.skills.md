@@ -1,1 +1,2 @@
-- Effective agents coordination
+- Create agents
+- Create Moderated Teams

@@ -103,7 +103,7 @@ if __name__ == "__main__":
 
     # setup 1: dev choose best language for LLM Agents
     context = AgentContext(replace(config, prompts_subdir="coordinator"))
-    context.agent0.agent_name= "Coordinator"
+    context.agent0.agent_name= "Project coordinator"
     # go_developer= Agent(1, config, context, "Golang Developer - Intern Golang developer responsible for writing and testing Golang code.")
     # js_developer= Agent(1, config, context, "Javascript Developer - Intern Javascript developer responsible for writing and testing Golang code.")
     # fartran_developer= Agent(1, config, context, "Fartran Developer - Intern Fartran developer responsible for writing and testing Golang code.")

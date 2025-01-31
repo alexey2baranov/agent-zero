@@ -52,7 +52,7 @@ AI:
     "tool_args": {
         "run": {
             "id": "NEW_FEATURE",
-            "message": "Hi guys! User ordered me to create a new feature. I created this team to do this together. Our goal - new implemented feature in code base."
+            "message": "Hi guys! User ordered me to create a new feature. I created this team to do this together. Our goal - new feature in code base."
         }
     }
 }

@@ -1,1 +1,2 @@
-- Group moderation
+- Giving a word to team members
+- Closing team meeting after all members agreed that the meeting goal is achieved

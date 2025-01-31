@@ -19,8 +19,6 @@ The best plan to develop Module is:
 
 IMPORTANT: In your teem each developer including you can oversee only it's own module. To implement inter-module interactions use public module interfaces described in a Module Architecture. If you have any questions about Module Architecture, feel free to ask.
 
-{% agent.team.md %}
-
 {% agent.instructions.md %}
 
 {% agent.workspace.md %}
